@@ -1,64 +1,69 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>1問1答クイズ</title>
+  <meta charset="UTF-8">
+  <title>〇×クイズ</title>
   <style>
     body {
       font-family: sans-serif;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 0 16px;
-      line-height: 1.6;
-    }
-    .card {
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      text-align: center;
       padding: 20px;
     }
-    input[type="text"] {
-      width: 100%;
-      max-width: 400px;
-      padding: 8px;
-      font-size: 16px;
-      margin-top: 8px;
+
+    #question {
+      font-size: 20px;
+      margin-bottom: 20px;
     }
-    button {
-      padding: 8px 16px;
-      font-size: 16px;
-      margin-top: 12px;
-      margin-right: 8px;
+
+    .answer-btn {
+      font-size: 24px;
+      padding: 15px 30px;
+      margin: 10px;
       cursor: pointer;
     }
+
     #result {
-      margin-top: 16px;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    #explanation {
+      margin-top: 10px;
+      color: #555;
+    }
+
+    #score {
+      margin-top: 20px;
       font-weight: bold;
     }
-    #score {
-      margin-top: 12px;
-      color: #333;
+
+    #nextButton {
+      margin-top: 20px;
+      padding: 10px 20px;
     }
   </style>
 </head>
+
 <body>
-  <h1>1問1答クイズ</h1>
 
-  <div class="card">
-    <p id="question">読み込み中...</p>
-    
-    <div>
-      <button onclick="answer('○')">○</button>
-      <button onclick="answer('×')">×</button>
-    </div>
+  <h1>〇×クイズ</h1>
 
-    <p id="result"></p>
-    <p id="explanation"></p>
-    <p id="score">0問中 0問正解</p>
+  <p id="question">読み込み中...</p>
 
-    <button id="nextButton">次の問題</button>
+  <!-- 👇ここが〇×ボタン -->
   <div>
+    <button class="answer-btn" onclick="answer('○')">○</button>
+    <button class="answer-btn" onclick="answer('×')">×</button>
+  </div>
+
+  <p id="result"></p>
+  <p id="explanation"></p>
+
+  <p id="score">0問中 0問正解</p>
+
+  <button id="nextButton">次の問題</button>
 
   <script src="app.js"></script>
+
 </body>
 </html>
