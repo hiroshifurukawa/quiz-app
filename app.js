@@ -5,7 +5,7 @@ let correctCount = 0;
 
 async function loadQuiz() {
   try {
-    const response = await fetch("./quiz.csv");
+    const response = await fetch("./kumite_quiz_merged.csv");
     if (!response.ok) {
       throw new Error("quiz.csv の読み込みに失敗しました");
     }
@@ -31,14 +31,16 @@ function parseCSV(csvText) {
   const header = rows[0];
   const questionIndex = header.indexOf("question");
   const answerIndex = header.indexOf("answer");
+  const explanationIndex = header.indexOf("explanation");
 
-  if (questionIndex === -1 || answerIndex === -1) {
-    throw new Error("CSVのヘッダーは question,answer にしてください");
+  if (questionIndex === -1 || answerIndex === -1 || explanationIndex === -1) {
+    throw new Error("CSVのヘッダーは question,answer,explanation にしてください");
   }
 
   return rows.slice(1).map(row => ({
     question: row[questionIndex]?.trim() || "",
-    answer: row[answerIndex]?.trim() || ""
+    answer: row[answerIndex]?.trim() || "",
+    explanation: row[explanationIndex]?.trim() || ""
   })).filter(item => item.question && item.answer);
 }
 
@@ -50,6 +52,7 @@ function showRandomQuestion() {
   document.getElementById("answerInput").value = "";
   document.getElementById("result").textContent = "";
   document.getElementById("answerInput").focus();
+  document.getElementById("explanation").textContent = "";
 }
 
 function normalizeText(text) {
@@ -65,13 +68,19 @@ function checkAnswer() {
 
   totalCount++;
 
+  const resultEl = document.getElementById("result");
+  const explanationEl = document.getElementById("explanation");
+
   if (normalizedUserAnswer === normalizedCorrectAnswer) {
     correctCount++;
-    document.getElementById("result").textContent = "正解です！";
+    resultEl.textContent = "正解です！";
   } else {
-    document.getElementById("result").textContent =
+    resultEl.textContent =
       `不正解です。正解は「${currentQuestion.answer}」です。`;
   }
+
+  // 説明を追加
+  explanationEl.textContent = currentQuestion.explanation || "";
 
   updateScore();
 }
