@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1問1答クイズ</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+    }
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+    }
+    input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      padding: 8px;
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      margin-top: 12px;
+      margin-right: 8px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 16px;
+      font-weight: bold;
+    }
+    #score {
+      margin-top: 12px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h1>1問1答クイズ</h1>
 
+  <div class="card">
+    <p id="question">読み込み中...</p>
+
+    <label for="answerInput">回答:</label><br />
+    <input type="text" id="answerInput" autocomplete="off" />
+
+    <div>
+      <button id="checkButton">回答する</button>
+      <button id="nextButton">次の問題</button>
+    </div>
+
+    <p id="result"></p>
+    <p id="score">0問中 0問正解</p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
