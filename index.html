@@ -16,7 +16,6 @@
       padding: 16px;
       background: #f7f7f7;
       color: #222;
-      line-height: 1.6;
     }
 
     .container {
@@ -24,12 +23,11 @@
       margin: 0 auto;
       background: #fff;
       border-radius: 16px;
-      padding: 20px 16px 28px;
+      padding: 20px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
 
     h1 {
-      font-size: 1.6rem;
       text-align: center;
       margin-bottom: 20px;
     }
@@ -41,49 +39,37 @@
       border-radius: 12px;
     }
 
-    .menu-area label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 8px;
-    }
-
     .menu-row {
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
+      gap: 8px;
     }
 
-    #rangeSelect {
-      flex: 1;
+    select, button {
       min-height: 44px;
-      font-size: 1rem;
-      padding: 8px;
       border-radius: 10px;
       border: 1px solid #ccc;
+      font-size: 1rem;
+      padding: 6px 10px;
     }
 
     #startButton {
-      min-height: 44px;
-      padding: 0 16px;
-      font-size: 1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
       background: #1976d2;
       color: white;
+      border: none;
+      font-weight: bold;
       cursor: pointer;
     }
 
     .status-area {
       display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      font-weight: bold;
       margin-bottom: 16px;
+      font-weight: bold;
     }
 
     #question {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: bold;
       margin-bottom: 20px;
       min-height: 4em;
@@ -98,11 +84,11 @@
 
     .answer-btn {
       font-size: 2rem;
-      font-weight: bold;
       min-height: 80px;
-      border: none;
       border-radius: 14px;
+      border: none;
       color: white;
+      font-weight: bold;
       cursor: pointer;
     }
 
@@ -114,15 +100,10 @@
       background: #c62828;
     }
 
-    .answer-btn:disabled {
-      opacity: 0.5;
-    }
-
     #result {
       font-size: 1.2rem;
       font-weight: bold;
       margin-top: 8px;
-      min-height: 2em;
     }
 
     #explanation {
@@ -133,29 +114,23 @@
       white-space: pre-wrap;
     }
 
-    #reviewButton {
-      width: 100%;
-      margin-top: 16px;
-      min-height: 48px;
-      font-size: 1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: #ff9800;
-      color: white;
-      cursor: pointer;
-    }
-
     #nextButton {
       width: 100%;
       margin-top: 16px;
-      min-height: 56px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
       background: #1976d2;
       color: white;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #reviewButton {
+      width: 100%;
+      margin-top: 12px;
+      background: #ff9800;
+      color: white;
+      border: none;
+      font-weight: bold;
       cursor: pointer;
     }
 
@@ -180,7 +155,7 @@
 
     @media (min-width: 768px) {
       #question {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
       }
 
       .answer-btn {
@@ -195,39 +170,56 @@
   <div class="container">
     <h1>〇×クイズ</h1>
 
+    <!-- ▼メニュー -->
     <div class="menu-area">
-      <label>出題範囲</label>
       <div class="menu-row">
-        <select id="rangeSelect">
-          <option value="1-50">1～50</option>
-          <option value="51-100">51～100</option>
-          <option value="101-150">101～150</option>
-          <option value="151-200">151～200</option>
-          <option value="1-200" selected>1～200</option>
+
+        <!-- 出題数 -->
+        <select id="countSelect">
+          <option value="25">25問</option>
+          <option value="50">50問</option>
+          <option value="100">100問</option>
+          <option value="200" selected>200問</option>
         </select>
+
+        <!-- 開始番号 -->
+        <select id="startNumberSelect"></select>
+
+        <!-- 自動遷移時間 -->
+        <select id="timeSelect">
+          <option value="1000">1秒</option>
+          <option value="3000" selected>3秒</option>
+          <option value="5000">5秒</option>
+        </select>
+
         <button id="startButton">開始 / リセット</button>
       </div>
     </div>
 
+    <!-- ▼ステータス -->
     <div class="status-area">
       <div id="score">0問中 0問正解</div>
       <div id="remaining">残り問題数: 0</div>
     </div>
 
+    <!-- ▼問題 -->
     <div id="question">「開始 / リセット」を押してください</div>
 
+    <!-- ▼回答 -->
     <div class="answer-buttons">
       <button class="answer-btn" onclick="answer('○')">○</button>
       <button class="answer-btn" onclick="answer('×')">×</button>
     </div>
 
+    <!-- ▼結果 -->
     <div id="result"></div>
     <div id="explanation"></div>
 
+    <!-- ▼順番入れ替え済 -->
+    <button id="nextButton">次の問題</button>
     <button id="reviewButton">この問題は回答要確認</button>
 
-    <button id="nextButton">次の問題</button>
-
+    <!-- ▼終了結果 -->
     <div id="finalResult"></div>
     <div id="reviewList"></div>
   </div>
