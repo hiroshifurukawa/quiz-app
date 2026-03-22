@@ -2,68 +2,179 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>〇×クイズ</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #f7f7f7;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 16px 28px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      font-size: 1.6rem;
       text-align: center;
-      padding: 20px;
+      margin: 0 0 20px;
     }
 
     #question {
-      font-size: 20px;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 24px;
+      white-space: normal;
+      word-break: break-word;
+    }
+
+    .answer-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-bottom: 20px;
     }
 
     .answer-btn {
-      font-size: 24px;
-      padding: 15px 30px;
-      margin: 10px;
+      min-height: 72px;
+      font-size: 2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 14px;
       cursor: pointer;
+      color: #fff;
+      touch-action: manipulation;
+    }
+
+    .answer-btn:first-child {
+      background: #2e7d32;
+    }
+
+    .answer-btn:last-child {
+      background: #c62828;
+    }
+
+    .answer-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     #result {
-      font-size: 18px;
-      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 8px;
+      min-height: 2em;
     }
 
     #explanation {
-      margin-top: 10px;
-      color: #555;
+      font-size: 1rem;
+      margin-top: 12px;
+      padding: 12px;
+      background: #f2f4f7;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 3em;
     }
 
     #score {
-      margin-top: 20px;
+      margin-top: 18px;
+      font-size: 1rem;
       font-weight: bold;
     }
 
     #nextButton {
+      display: block;
+      width: 100%;
+      min-height: 56px;
       margin-top: 20px;
-      padding: 10px 20px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #1976d2;
+      color: #fff;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    #nextButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 24px;
+      }
+
+      .container {
+        padding: 28px 24px 32px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      #question {
+        font-size: 1.5rem;
+      }
+
+      .answer-btn {
+        min-height: 88px;
+        font-size: 2.4rem;
+      }
+
+      #result {
+        font-size: 1.3rem;
+      }
+
+      #explanation {
+        font-size: 1.05rem;
+      }
+
+      #nextButton {
+        width: auto;
+        min-width: 220px;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="container">
+    <h1>〇×クイズ</h1>
 
-  <h1>〇×クイズ</h1>
+    <p id="question">読み込み中...</p>
 
-  <p id="question">読み込み中...</p>
+    <div class="answer-buttons">
+      <button class="answer-btn" onclick="answer('○')">○</button>
+      <button class="answer-btn" onclick="answer('×')">×</button>
+    </div>
 
-  <!-- 👇ここが〇×ボタン -->
-  <div>
-    <button class="answer-btn" onclick="answer('○')">○</button>
-    <button class="answer-btn" onclick="answer('×')">×</button>
+    <p id="result"></p>
+    <div id="explanation"></div>
+
+    <p id="score">0問中 0問正解</p>
+
+    <button id="nextButton">次の問題</button>
   </div>
 
-  <p id="result"></p>
-  <p id="explanation"></p>
-
-  <p id="score">0問中 0問正解</p>
-
-  <button id="nextButton">次の問題</button>
-
   <script src="app.js"></script>
-
 </body>
 </html>
