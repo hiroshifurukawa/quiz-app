@@ -56,10 +56,12 @@ GitHub Pages上で動作し、スマホ・PCのどちらでも快適に利用で
 ---
 
 ## 📂 ファイル構成
+<code>
 ├── index.html # UI（画面）
 ├── app.js # ロジック（クイズ処理）
 ├── kumite_quiz_merged.csv # 問題データ
 └── README.md
+</code>
 
 ---
 
@@ -71,6 +73,7 @@ GitHub Pages上で動作し、スマホ・PCのどちらでも快適に利用で
 number,question,answer,explanation
 1,問題文,○,解説文
 2,問題文,×,解説文
+```
 
 ---
 
