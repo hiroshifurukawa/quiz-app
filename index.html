@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>〇×クイズ</title>
+
   <style>
     * {
       box-sizing: border-box;
@@ -24,13 +25,13 @@
       background: #fff;
       border-radius: 16px;
       padding: 20px 16px 28px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
     }
 
     h1 {
       font-size: 1.6rem;
       text-align: center;
-      margin: 0 0 20px;
+      margin-bottom: 20px;
     }
 
     .menu-area {
@@ -41,8 +42,8 @@
     }
 
     .menu-area label {
-      display: block;
       font-weight: bold;
+      display: block;
       margin-bottom: 8px;
     }
 
@@ -57,9 +58,8 @@
       min-height: 44px;
       font-size: 1rem;
       padding: 8px;
-      border: 1px solid #ccc;
       border-radius: 10px;
-      background: #fff;
+      border: 1px solid #ccc;
     }
 
     #startButton {
@@ -70,28 +70,23 @@
       border: none;
       border-radius: 10px;
       background: #1976d2;
-      color: #fff;
+      color: white;
       cursor: pointer;
-      touch-action: manipulation;
     }
 
     .status-area {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-      font-size: 1rem;
-      font-weight: bold;
       flex-wrap: wrap;
+      font-weight: bold;
+      margin-bottom: 16px;
     }
 
     #question {
       font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0 0 20px;
-      white-space: normal;
-      word-break: break-word;
-      min-height: 4.5em;
+      font-weight: bold;
+      margin-bottom: 20px;
+      min-height: 4em;
     }
 
     .answer-buttons {
@@ -102,14 +97,13 @@
     }
 
     .answer-btn {
-      min-height: 72px;
       font-size: 2rem;
       font-weight: bold;
+      min-height: 80px;
       border: none;
       border-radius: 14px;
+      color: white;
       cursor: pointer;
-      color: #fff;
-      touch-action: manipulation;
     }
 
     .answer-btn:first-child {
@@ -122,7 +116,6 @@
 
     .answer-btn:disabled {
       opacity: 0.5;
-      cursor: not-allowed;
     }
 
     #result {
@@ -133,6 +126,112 @@
     }
 
     #explanation {
-      font-size: 1rem;
       margin-top: 12px;
       padding: 12px;
+      background: #f2f4f7;
+      border-radius: 12px;
+      white-space: pre-wrap;
+    }
+
+    #reviewButton {
+      width: 100%;
+      margin-top: 16px;
+      min-height: 48px;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #ff9800;
+      color: white;
+      cursor: pointer;
+    }
+
+    #nextButton {
+      width: 100%;
+      margin-top: 16px;
+      min-height: 56px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      background: #1976d2;
+      color: white;
+      cursor: pointer;
+    }
+
+    #finalResult {
+      margin-top: 20px;
+      padding: 14px;
+      background: #fff8e1;
+      border-radius: 12px;
+      font-weight: bold;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    #reviewList {
+      margin-top: 16px;
+      padding: 14px;
+      background: #fff3cd;
+      border-radius: 12px;
+      white-space: pre-wrap;
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      #question {
+        font-size: 1.5rem;
+      }
+
+      .answer-btn {
+        min-height: 100px;
+        font-size: 2.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>〇×クイズ</h1>
+
+    <div class="menu-area">
+      <label>出題範囲</label>
+      <div class="menu-row">
+        <select id="rangeSelect">
+          <option value="1-50">1～50</option>
+          <option value="51-100">51～100</option>
+          <option value="101-150">101～150</option>
+          <option value="151-200">151～200</option>
+          <option value="1-200" selected>1～200</option>
+        </select>
+        <button id="startButton">開始 / リセット</button>
+      </div>
+    </div>
+
+    <div class="status-area">
+      <div id="score">0問中 0問正解</div>
+      <div id="remaining">残り問題数: 0</div>
+    </div>
+
+    <div id="question">「開始 / リセット」を押してください</div>
+
+    <div class="answer-buttons">
+      <button class="answer-btn" onclick="answer('○')">○</button>
+      <button class="answer-btn" onclick="answer('×')">×</button>
+    </div>
+
+    <div id="result"></div>
+    <div id="explanation"></div>
+
+    <button id="reviewButton">この問題は回答要確認</button>
+
+    <button id="nextButton">次の問題</button>
+
+    <div id="finalResult"></div>
+    <div id="reviewList"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
