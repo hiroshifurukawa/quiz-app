@@ -96,7 +96,6 @@ function updateScore() {
     `${totalCount}問中 ${correctCount}問正解`;
 }
 
-document.getElementById("checkButton").addEventListener("click", checkAnswer);
 document.getElementById("nextButton").addEventListener("click", showRandomQuestion);
 
 document.getElementById("answerInput").addEventListener("keydown", (event) => {
