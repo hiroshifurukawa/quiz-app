@@ -173,28 +173,38 @@
     <!-- ▼メニュー -->
     <div class="menu-area">
       <div class="menu-row">
-
         <!-- 出題数 -->
-        <select id="countSelect">
-          <option value="25">25問</option>
-          <option value="50">50問</option>
-          <option value="100">100問</option>
-          <option value="200" selected>200問</option>
-        </select>
+        <div>
+          <label>出題数</label><br>
+          <select id="countSelect">
+            <option value="25">25問</option>
+            <option value="50">50問</option>
+            <option value="100">100問</option>
+            <option value="200" selected>200問</option>
+          </select>
+        </div>
 
         <!-- 開始番号 -->
-        <select id="startNumberSelect"></select>
+        <div>
+          <label>開始問題番号</label><br>
+          <select id="startNumberSelect"></select>
+        </div>
+      
+        <!-- 自動切替時間 -->
+        <div>
+          <label>次の問題までの時間</label><br>
+          <select id="timeSelect">
+            <option value="1000">1秒</option>
+            <option value="3000" selected>3秒</option>
+            <option value="5000">5秒</option>
+          </select>
+        </div>
 
-        <!-- 自動遷移時間 -->
-        <select id="timeSelect">
-          <option value="1000">1秒</option>
-          <option value="3000" selected>3秒</option>
-          <option value="5000">5秒</option>
-        </select>
-
-        <button id="startButton">開始 / リセット</button>
+        <!-- 開始 -->
+        <div style="align-self: flex-end;">
+          <button id="startButton">開始 / リセット</button>
+        </div>
       </div>
-    </div>
 
     <!-- ▼ステータス -->
     <div class="status-area">
