@@ -98,10 +98,4 @@ function updateScore() {
 
 document.getElementById("nextButton").addEventListener("click", showRandomQuestion);
 
-document.getElementById("answerInput").addEventListener("keydown", (event) => {
-  if (event.key === "Enter") {
-    checkAnswer();
-  }
-});
-
 loadQuiz();
