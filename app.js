@@ -96,6 +96,11 @@ function updateStartOptions() {
     option.value = i;
     option.textContent = i;
     select.appendChild(option);
+
+     // 第1問をデフォルトに設定
+     if (i === 1) {
+      option.selected = true;
+    }
   }
 }
 
