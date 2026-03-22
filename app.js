@@ -8,11 +8,13 @@ let correctCount = 0;
 let answered = false;
 let quizFinished = false;
 
-// 要確認チェック用
 let reviewMarkedQuestions = [];
 
+let nextTimer = null;
+let autoNextTime = 3000;
+
 /* =========================
-   CSV読み込み（改行対応版）
+   CSV読み込み（改行対応）
 ========================= */
 async function loadQuiz() {
   try {
@@ -32,6 +34,9 @@ async function loadQuiz() {
   }
 }
 
+/* =========================
+   CSVパース（改行OK）
+========================= */
 function parseCSV(text) {
   const rows = [];
   let current = [];
@@ -69,8 +74,6 @@ function parseCSV(text) {
     rows.push(current);
   }
 
-  const header = rows[0];
-
   return rows.slice(1).map(row => ({
     number: Number(row[0]),
     question: row[1] || "",
@@ -80,13 +83,41 @@ function parseCSV(text) {
 }
 
 /* =========================
+   開始番号候補生成
+========================= */
+function updateStartOptions() {
+  const count = Number(document.getElementById("countSelect").value);
+  const select = document.getElementById("startNumberSelect");
+
+  select.innerHTML = "";
+
+  for (let i = 1; i <= 200; i += count) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    select.appendChild(option);
+  }
+}
+
+/* =========================
    クイズ開始
 ========================= */
 function startQuiz() {
-  const rangeValue = document.getElementById("rangeSelect").value;
-  const [start, end] = rangeValue.split("-").map(Number);
 
-  filteredQuizData = quizData.filter(q => q.number >= start && q.number <= end);
+  if (nextTimer) {
+    clearTimeout(nextTimer);
+    nextTimer = null;
+  }
+
+  const count = Number(document.getElementById("countSelect").value);
+  const start = Number(document.getElementById("startNumberSelect").value);
+  const end = start + count - 1;
+
+  autoNextTime = Number(document.getElementById("timeSelect").value);
+
+  filteredQuizData = quizData.filter(q =>
+    q.number >= start && q.number <= end
+  );
 
   remainingQuestions = [...filteredQuizData];
 
@@ -109,6 +140,12 @@ function startQuiz() {
    問題表示
 ========================= */
 function showNextQuestion() {
+
+  if (nextTimer) {
+    clearTimeout(nextTimer);
+    nextTimer = null;
+  }
+
   if (remainingQuestions.length === 0) {
     finishQuiz();
     return;
@@ -154,7 +191,6 @@ function answer(userAnswer) {
 
   explanationEl.textContent = currentQuestion.explanation;
 
-  // 出題済みから削除
   remainingQuestions = remainingQuestions.filter(
     q => q.number !== currentQuestion.number
   );
@@ -168,6 +204,11 @@ function answer(userAnswer) {
     finishQuiz();
   } else {
     document.getElementById("nextButton").disabled = false;
+
+    // 自動遷移
+    nextTimer = setTimeout(() => {
+      showNextQuestion();
+    }, autoNextTime);
   }
 }
 
@@ -210,7 +251,6 @@ function finishQuiz() {
   finalEl.textContent =
     `成績\n正解: ${correctCount}/${totalCount}\n正答率: ${rate}%`;
 
-  // 要確認一覧
   const reviewEl = document.getElementById("reviewList");
 
   if (reviewMarkedQuestions.length > 0) {
@@ -248,11 +288,20 @@ function disableAnswerButtons(disabled) {
 /* =========================
    イベント
 ========================= */
-document.getElementById("nextButton").addEventListener("click", showNextQuestion);
+document.getElementById("nextButton").addEventListener("click", () => {
+  if (nextTimer) {
+    clearTimeout(nextTimer);
+    nextTimer = null;
+  }
+  showNextQuestion();
+});
+
 document.getElementById("startButton").addEventListener("click", startQuiz);
 document.getElementById("reviewButton").addEventListener("click", markForReview);
+document.getElementById("countSelect").addEventListener("change", updateStartOptions);
 
 /* =========================
    初期化
 ========================= */
+updateStartOptions();
 loadQuiz();
