@@ -2,6 +2,7 @@ let quizData = [];
 let currentQuestion = null;
 let totalCount = 0;
 let correctCount = 0;
+let answered = false;
 
 async function loadQuiz() {
   try {
@@ -49,37 +50,42 @@ function showRandomQuestion() {
   currentQuestion = quizData[randomIndex];
 
   document.getElementById("question").textContent = currentQuestion.question;
-  document.getElementById("answerInput").value = "";
   document.getElementById("result").textContent = "";
-  document.getElementById("answerInput").focus();
   document.getElementById("explanation").textContent = "";
+
+  answered = false;
+
+  // ボタン有効化
+  document.querySelectorAll(".answer-btn").forEach(btn => btn.disabled = false);
 }
 
 function normalizeText(text) {
   return text.trim().toLowerCase();
 }
 
-function checkAnswer() {
+function answer(userAnswer) {
   if (!currentQuestion) return;
 
-  const userAnswer = document.getElementById("answerInput").value;
-  const normalizedUserAnswer = normalizeText(userAnswer);
-  const normalizedCorrectAnswer = normalizeText(currentQuestion.answer);
+  // すでに答えてたら無視
+  if (answered) return;
+
+  answered = true; // 回答済みにする
+
+  // ボタン無効化
+  document.querySelectorAll(".answer-btn").forEach(btn => btn.disabled = true);
 
   totalCount++;
 
   const resultEl = document.getElementById("result");
   const explanationEl = document.getElementById("explanation");
 
-  if (normalizedUserAnswer === normalizedCorrectAnswer) {
+  if (userAnswer === currentQuestion.answer) {
     correctCount++;
-    resultEl.textContent = "正解です！";
+    resultEl.textContent = "正解！";
   } else {
-    resultEl.textContent =
-      `不正解です。正解は「${currentQuestion.answer}」です。`;
+    resultEl.textContent = `不正解（正解: ${currentQuestion.answer}）`;
   }
 
-  // 説明を追加
   explanationEl.textContent = currentQuestion.explanation || "";
 
   updateScore();
