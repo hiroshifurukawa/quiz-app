@@ -57,6 +57,9 @@
       min-height: 44px;
       font-size: 1rem;
       padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background: #fff;
     }
 
     #startButton {
@@ -69,15 +72,7 @@
       background: #1976d2;
       color: #fff;
       cursor: pointer;
-    }
-
-    #question {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin: 0 0 24px;
-      white-space: normal;
-      word-break: break-word;
-      min-height: 4.5em;
+      touch-action: manipulation;
     }
 
     .status-area {
@@ -90,11 +85,20 @@
       flex-wrap: wrap;
     }
 
+    #question {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 20px;
+      white-space: normal;
+      word-break: break-word;
+      min-height: 4.5em;
+    }
+
     .answer-buttons {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .answer-btn {
@@ -132,129 +136,3 @@
       font-size: 1rem;
       margin-top: 12px;
       padding: 12px;
-      background: #f2f4f7;
-      border-radius: 12px;
-      white-space: pre-wrap;
-      word-break: break-word;
-      min-height: 3em;
-    }
-
-    #score {
-      margin-top: 18px;
-      font-size: 1rem;
-      font-weight: bold;
-    }
-
-    #finalResult {
-      margin-top: 20px;
-      padding: 14px;
-      background: #fff8e1;
-      border: 1px solid #f0d98c;
-      border-radius: 12px;
-      font-size: 1.05rem;
-      font-weight: bold;
-      white-space: pre-wrap;
-      display: none;
-    }
-
-    #nextButton {
-      display: block;
-      width: 100%;
-      min-height: 56px;
-      margin-top: 20px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border: none;
-      border-radius: 12px;
-      background: #1976d2;
-      color: #fff;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
-
-    #nextButton:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    @media (min-width: 768px) {
-      body {
-        padding: 24px;
-      }
-
-      .container {
-        padding: 28px 24px 32px;
-      }
-
-      h1 {
-        font-size: 2rem;
-      }
-
-      #question {
-        font-size: 1.5rem;
-      }
-
-      .answer-btn {
-        min-height: 88px;
-        font-size: 2.4rem;
-      }
-
-      #result {
-        font-size: 1.3rem;
-      }
-
-      #explanation {
-        font-size: 1.05rem;
-      }
-
-      #nextButton {
-        width: auto;
-        min-width: 220px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <div class="container">
-    <h1>〇×クイズ</h1>
-
-    <div class="menu-area">
-      <label for="rangeSelect">出題範囲を選択</label>
-      <div class="menu-row">
-        <select id="rangeSelect">
-          <option value="1-50">1～50</option>
-          <option value="51-100">51～100</option>
-          <option value="101-150">101～150</option>
-          <option value="151-200">151～200</option>
-          <option value="1-200" selected>1～200</option>
-        </select>
-        <button id="startButton">開始 / リセット</button>
-      </div>
-    </div>
-
-    <div class="status-area">
-      <div id="score">0問中 0問正解</div>
-      <div id="remaining">残り問題数: 0</div>
-    </div>
-
-    <p id="question">「開始 / リセット」を押してください</p>
-
-    <div class="answer-buttons">
-      <button class="answer-btn" onclick="answer('○')">○</button>
-      <button class="answer-btn" onclick="answer('×')">×</button>
-    </div>
-
-    <p id="result"></p>
-    <div id="explanation"></div>
-
-    <div id="finalResult"></div>
-
-    <button id="nextButton">次の問題</button>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
