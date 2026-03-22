@@ -1,307 +1,58 @@
-let quizData = [];
-let filteredQuizData = [];
-let remainingQuestions = [];
-let currentQuestion = null;
+# 〇×クイズアプリ（Kumite Quiz App）
 
-let totalCount = 0;
-let correctCount = 0;
-let answered = false;
-let quizFinished = false;
+ブラウザで動作する、CSVベースの〇×クイズ学習アプリです。  
+GitHub Pages上で動作し、スマホ・PCのどちらでも快適に利用できます。
 
-let reviewMarkedQuestions = [];
+---
 
-let nextTimer = null;
-let autoNextTime = 3000;
+## 🚀 概要
 
-/* =========================
-   CSV読み込み（改行対応）
-========================= */
-async function loadQuiz() {
-  try {
-    const response = await fetch("./kumite_quiz_merged.csv");
-    if (!response.ok) throw new Error("CSV読み込み失敗");
+本アプリは、CSVファイルに登録された問題データをもとに、
 
-    const text = await response.text();
-    quizData = parseCSV(text);
+- ランダム出題
+- 解説表示
+- 自動進行
+- 要確認チェック
 
-    document.getElementById("question").textContent = "「開始 / リセット」を押してください";
-    disableAnswerButtons(true);
-    document.getElementById("nextButton").disabled = true;
+を行う、軽量なクイズ学習ツールです。
 
-  } catch (e) {
-    document.getElementById("question").textContent = "エラー: " + e.message;
-    console.error(e);
-  }
-}
+特に「短時間で繰り返し学習したい用途」に適しています。
 
-/* =========================
-   CSVパース（改行OK）
-========================= */
-function parseCSV(text) {
-  const rows = [];
-  let current = [];
-  let field = "";
-  let inQuotes = false;
+---
 
-  for (let i = 0; i < text.length; i++) {
-    const char = text[i];
-    const next = text[i + 1];
+## ✨ 主な機能
 
-    if (char === '"') {
-      if (inQuotes && next === '"') {
-        field += '"';
-        i++;
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (char === "," && !inQuotes) {
-      current.push(field);
-      field = "";
-    } else if ((char === "\n" || char === "\r") && !inQuotes) {
-      if (field !== "" || current.length > 0) {
-        current.push(field);
-        rows.push(current);
-        current = [];
-        field = "";
-      }
-    } else {
-      field += char;
-    }
-  }
+### ■ 出題設定
+- 出題数選択（25 / 50 / 100 / 200問）
+- 開始番号選択（例：1, 26, 51...）
+- 範囲指定による分割学習が可能
 
-  if (field !== "" || current.length > 0) {
-    current.push(field);
-    rows.push(current);
-  }
+### ■ クイズ機能
+- 〇 / × の2択回答
+- ランダム出題（重複なし）
+- 残り問題数の表示
+- 正答数カウント
 
-  return rows.slice(1).map(row => ({
-    number: Number(row[0]),
-    question: row[1] || "",
-    answer: row[2] || "",
-    explanation: row[3] || ""
-  }));
-}
+### ■ 解説表示
+- 回答後に即時表示
+- 改行を含むCSVにも対応
 
-/* =========================
-   開始番号候補生成
-========================= */
-function updateStartOptions() {
-  const count = Number(document.getElementById("countSelect").value);
-  const select = document.getElementById("startNumberSelect");
+### ■ 自動進行
+- 回答後、一定時間で次の問題へ自動遷移
+- 選択可能な時間：
+  - 1秒
+  - 3秒
+  - 5秒
 
-  select.innerHTML = "";
+### ■ 要確認チェック
+- 「この問題は回答要確認」ボタン
+- 後で見直したい問題を記録
 
-  for (let i = 1; i <= 200; i += count) {
-    const option = document.createElement("option");
-    option.value = i;
-    option.textContent = i;
-    select.appendChild(option);
-  }
-}
+### ■ 結果表示
+- 正解数 / 総問題数
+- 正答率（%）
+- 要確認問題一覧表示
 
-/* =========================
-   クイズ開始
-========================= */
-function startQuiz() {
+---
 
-  if (nextTimer) {
-    clearTimeout(nextTimer);
-    nextTimer = null;
-  }
-
-  const count = Number(document.getElementById("countSelect").value);
-  const start = Number(document.getElementById("startNumberSelect").value);
-  const end = start + count - 1;
-
-  autoNextTime = Number(document.getElementById("timeSelect").value);
-
-  filteredQuizData = quizData.filter(q =>
-    q.number >= start && q.number <= end
-  );
-
-  remainingQuestions = [...filteredQuizData];
-
-  totalCount = 0;
-  correctCount = 0;
-  answered = false;
-  quizFinished = false;
-  reviewMarkedQuestions = [];
-
-  document.getElementById("finalResult").style.display = "none";
-  document.getElementById("reviewList").style.display = "none";
-
-  updateScore();
-  updateRemaining();
-
-  showNextQuestion();
-}
-
-/* =========================
-   問題表示
-========================= */
-function showNextQuestion() {
-
-  if (nextTimer) {
-    clearTimeout(nextTimer);
-    nextTimer = null;
-  }
-
-  if (remainingQuestions.length === 0) {
-    finishQuiz();
-    return;
-  }
-
-  const index = Math.floor(Math.random() * remainingQuestions.length);
-  currentQuestion = remainingQuestions[index];
-
-  document.getElementById("question").textContent =
-    `【${currentQuestion.number}】${currentQuestion.question}`;
-
-  document.getElementById("result").textContent = "";
-  document.getElementById("explanation").textContent = "";
-
-  document.getElementById("reviewButton").disabled = false;
-  document.getElementById("reviewButton").textContent = "この問題は回答要確認";
-
-  answered = false;
-  disableAnswerButtons(false);
-  document.getElementById("nextButton").disabled = true;
-
-  updateRemaining();
-}
-
-/* =========================
-   回答処理
-========================= */
-function answer(userAnswer) {
-  if (!currentQuestion || answered || quizFinished) return;
-
-  answered = true;
-  totalCount++;
-
-  const resultEl = document.getElementById("result");
-  const explanationEl = document.getElementById("explanation");
-
-  if (userAnswer === currentQuestion.answer) {
-    correctCount++;
-    resultEl.textContent = "正解！";
-  } else {
-    resultEl.textContent = `不正解（正解: ${currentQuestion.answer}）`;
-  }
-
-  explanationEl.textContent = currentQuestion.explanation;
-
-  remainingQuestions = remainingQuestions.filter(
-    q => q.number !== currentQuestion.number
-  );
-
-  updateScore();
-  updateRemaining();
-
-  disableAnswerButtons(true);
-
-  if (remainingQuestions.length === 0) {
-    finishQuiz();
-  } else {
-    document.getElementById("nextButton").disabled = false;
-
-    // 自動遷移
-    nextTimer = setTimeout(() => {
-      showNextQuestion();
-    }, autoNextTime);
-  }
-}
-
-/* =========================
-   要確認チェック
-========================= */
-function markForReview() {
-  if (!currentQuestion || quizFinished) return;
-
-  const exists = reviewMarkedQuestions.some(
-    q => q.number === currentQuestion.number
-  );
-  if (exists) return;
-
-  reviewMarkedQuestions.push({
-    number: currentQuestion.number,
-    question: currentQuestion.question
-  });
-
-  document.getElementById("reviewButton").textContent = "チェック済み";
-}
-
-/* =========================
-   終了処理
-========================= */
-function finishQuiz() {
-  quizFinished = true;
-  disableAnswerButtons(true);
-  document.getElementById("nextButton").disabled = true;
-
-  document.getElementById("question").textContent = "全問完了しました";
-
-  const rate =
-    totalCount > 0
-      ? ((correctCount / totalCount) * 100).toFixed(1)
-      : "0.0";
-
-  const finalEl = document.getElementById("finalResult");
-  finalEl.style.display = "block";
-  finalEl.textContent =
-    `成績\n正解: ${correctCount}/${totalCount}\n正答率: ${rate}%`;
-
-  const reviewEl = document.getElementById("reviewList");
-
-  if (reviewMarkedQuestions.length > 0) {
-    const text = reviewMarkedQuestions
-      .map(q => `【${q.number}】${q.question}`)
-      .join("\n");
-
-    reviewEl.style.display = "block";
-    reviewEl.textContent =
-      `以下の問題は回答要確認のチェックが入りました\n\n${text}`;
-  } else {
-    reviewEl.style.display = "none";
-  }
-}
-
-/* =========================
-   UI補助
-========================= */
-function updateScore() {
-  document.getElementById("score").textContent =
-    `${totalCount}問中 ${correctCount}問正解`;
-}
-
-function updateRemaining() {
-  document.getElementById("remaining").textContent =
-    `残り問題数: ${remainingQuestions.length}`;
-}
-
-function disableAnswerButtons(disabled) {
-  document.querySelectorAll(".answer-btn").forEach(btn => {
-    btn.disabled = disabled;
-  });
-}
-
-/* =========================
-   イベント
-========================= */
-document.getElementById("nextButton").addEventListener("click", () => {
-  if (nextTimer) {
-    clearTimeout(nextTimer);
-    nextTimer = null;
-  }
-  showNextQuestion();
-});
-
-document.getElementById("startButton").addEventListener("click", startQuiz);
-document.getElementById("reviewButton").addEventListener("click", markForReview);
-document.getElementById("countSelect").addEventListener("change", updateStartOptions);
-
-/* =========================
-   初期化
-========================= */
-updateStartOptions();
-loadQuiz();
+## 📂 ファイル構成
