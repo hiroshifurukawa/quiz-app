@@ -198,7 +198,8 @@ function answer(userAnswer) {
     incorrectQuestions.push({
        number: currentQuestion.number,
        question: currentQuestion.question,
-       answer: currentQuestion.answer
+       answer: currentQuestion.answer,
+       explanation: currentQuestion.explanation
     });
 
   }
@@ -271,7 +272,7 @@ function finishQuiz() {
 
    if (incorrectQuestions.length > 0) {
      const incorrectText = incorrectQuestions
-       .map(q => `【${q.number}】${q.question}\n正解: ${q.answer}`)
+       .map(q => `【${q.number}】${q.question}\n正解: ${q.answer}\n解説: ${q.explanation}
        .join("\n\n");
    
      sections.push(`間違えた問題一覧\n\n${incorrectText}`);
