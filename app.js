@@ -9,6 +9,7 @@ let answered = false;
 let quizFinished = false;
 
 let reviewMarkedQuestions = [];
+let incorrectQuestions = [];
 
 let nextTimer = null;
 let autoNextTime = 3000;
@@ -131,6 +132,7 @@ function startQuiz() {
   answered = false;
   quizFinished = false;
   reviewMarkedQuestions = [];
+  incorrectQuestions = [];
 
   document.getElementById("finalResult").style.display = "none";
   document.getElementById("reviewList").style.display = "none";
@@ -192,6 +194,13 @@ function answer(userAnswer) {
     resultEl.textContent = "正解！";
   } else {
     resultEl.textContent = `不正解（正解: ${currentQuestion.answer}）`;
+
+    incorrectQuestions.push({
+       number: currentQuestion.number,
+       question: currentQuestion.question,
+       answer: currentQuestion.answer
+    });
+
   }
 
   explanationEl.textContent = currentQuestion.explanation;
@@ -258,17 +267,30 @@ function finishQuiz() {
 
   const reviewEl = document.getElementById("reviewList");
 
-  if (reviewMarkedQuestions.length > 0) {
-    const text = reviewMarkedQuestions
-      .map(q => `【${q.number}】${q.question}`)
-      .join("\n");
+   let sections = [];
 
-    reviewEl.style.display = "block";
-    reviewEl.textContent =
-      `以下の問題は回答要確認のチェックが入りました\n\n${text}`;
-  } else {
-    reviewEl.style.display = "none";
-  }
+   if (incorrectQuestions.length > 0) {
+     const incorrectText = incorrectQuestions
+       .map(q => `【${q.number}】${q.question}\n正解: ${q.answer}`)
+       .join("\n\n");
+   
+     sections.push(`間違えた問題一覧\n\n${incorrectText}`);
+   }
+   
+   if (reviewMarkedQuestions.length > 0) {
+     const reviewText = reviewMarkedQuestions
+       .map(q => `【${q.number}】${q.question}`)
+       .join("\n");
+   
+     sections.push(`以下の問題は回答要確認のチェックが入りました\n\n${reviewText}`);
+   }
+   
+   if (sections.length > 0) {
+     reviewEl.style.display = "block";
+     reviewEl.textContent = sections.join("\n\n--------------------\n\n");
+   } else {
+     reviewEl.style.display = "none";
+   }   
 }
 
 /* =========================
