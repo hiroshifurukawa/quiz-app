@@ -272,7 +272,7 @@ function finishQuiz() {
 
    if (incorrectQuestions.length > 0) {
      const incorrectText = incorrectQuestions
-       .map(q => `【${q.number}】${q.question}\n正解: ${q.answer}\n解説: ${q.explanation}
+       .map(q => `【${q.number}】${q.question}\n正解: ${q.answer}\n解説: ${q.explanation}`)
        .join("\n\n");
    
      sections.push(`間違えた問題一覧\n\n${incorrectText}`);
