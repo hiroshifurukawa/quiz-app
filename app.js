@@ -91,7 +91,7 @@ function updateStartOptions() {
 
   select.innerHTML = "";
 
-  for (let i = 1; i <= 200; i += count) {
+  for (let i = 1; i <= 275; i += count) {
     const option = document.createElement("option");
     option.value = i;
     option.textContent = i;
